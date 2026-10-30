@@ -30,7 +30,7 @@ jobs:
           chmod +x gradlew
         fi
 
-          - name: Build Debug APK
+      - name: Build Debug APK
         run: |
           set -o pipefail
           gradle assembleDebug --stacktrace --info --console=plain 2>&1 | tee build.log
