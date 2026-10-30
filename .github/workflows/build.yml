@@ -25,22 +25,19 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
 
     - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build Debug APK
       run: |
-        if [ -f "./gradlew" ]; then
-          chmod +x gradlew
-        fi
+        set -o pipefail
+        ./gradlew assembleDebug --stacktrace --info --console=plain 2>&1 | tee build.log
 
-      - name: Build Debug APK
-        run: |
-          set -o pipefail
-          gradle assembleDebug --stacktrace --info --console=plain 2>&1 | tee build.log
-
-      - name: Upload Build Log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Gradle-Build-Log
-          path: build.log
+    - name: Upload Build Log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Gradle-Build-Log
+        path: build.log
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
