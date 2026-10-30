@@ -30,13 +30,17 @@ jobs:
           chmod +x gradlew
         fi
 
-    - name: Build Debug APK
-      run: |
-        if [ -f "./gradlew" ]; then
-          ./gradlew assembleDebug
-        else
-          gradle assembleDebug
-        fi
+          - name: Build Debug APK
+        run: |
+          set -o pipefail
+          gradle assembleDebug --stacktrace --info --console=plain 2>&1 | tee build.log
+
+      - name: Upload Build Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gradle-Build-Log
+          path: build.log
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
